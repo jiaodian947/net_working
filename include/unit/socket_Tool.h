@@ -6,7 +6,7 @@
 #include <queue>
 #pragma comment(lib, "WS2_32.lib") 
 
-bool GetSocket(SOCKET& socket_handle)
+inline bool GetSocket(SOCKET& socket_handle)
 {
 	socket_handle = socket(AF_INET, SOCK_STREAM, 0);
 	if (INVALID_SOCKET == socket_handle)
@@ -17,7 +17,7 @@ bool GetSocket(SOCKET& socket_handle)
 	return true;
 }
 		
-bool SetBroadcast(SOCKET& socket_handle)
+inline bool SetBroadcast(SOCKET& socket_handle)
 {
 	// 设置socket可重用
 	int bReuseaddr = 1;
@@ -30,7 +30,7 @@ bool SetBroadcast(SOCKET& socket_handle)
 	return true;
 }
 
-bool BingSocket(SOCKET& socket_handle, const char* addr, int port)
+inline bool BingSocket(SOCKET& socket_handle, const char* addr, int port)
 {
 	sockaddr_in sa;
 	sa.sin_family = AF_INET;
@@ -46,7 +46,7 @@ bool BingSocket(SOCKET& socket_handle, const char* addr, int port)
 	return true;
 }
 
-bool ListenSocket(SOCKET& socket_handle, int backlog)
+inline bool ListenSocket(SOCKET& socket_handle, int backlog)
 {
 	int res = listen(socket_handle, SOMAXCONN_HINT(backlog));
 	if (SOCKET_ERROR == res)
@@ -57,7 +57,7 @@ bool ListenSocket(SOCKET& socket_handle, int backlog)
 	return true;
 }
 
-bool SocketClose(SOCKET& sock_handle)
+inline bool SocketClose(SOCKET& sock_handle)
 {
 	int res = closesocket(sock_handle);
 	if (SOCKET_ERROR == res)

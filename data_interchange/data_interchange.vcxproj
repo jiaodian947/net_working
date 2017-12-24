@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\define\data_interchange_define.h" />
+    <ClInclude Include="..\include\define\InterfaceTool.h" />
     <ClInclude Include="..\include\unit\get_parameters_number.h" />
     <ClInclude Include="..\include\unit\singleton_temp.h" />
     <ClInclude Include="..\include\unit\socket_Tool.h" />

@@ -25,6 +25,9 @@
     <ClInclude Include="..\include\unit\socket_Tool.h">
       <Filter>include\unit</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\define\InterfaceTool.h">
+      <Filter>include\define</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="data_interchange.cpp" />
