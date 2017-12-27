@@ -94,7 +94,14 @@ int DataInterChange::LoopEventInfo()
 			{
 			case COMPLETION_PORT_LISTENER:
 			{
-				
+				PutReceve(pIoContext->ConnectSocket, listenSocket);
+				PutAccpet();
+			}
+			break;
+			case COMPLETION_PORT_RECEV:
+			{
+
+				PutReceve(pIoContext->ConnectSocket, listenSocket);
 			}
 			break;
 			}
@@ -114,13 +121,13 @@ int DataInterChange::PutAccpet()
 	}
 
 	// ready to accept
-	overlapp_sct pOverlapPlus;
+	overlapp_sct* pOverlapPlus = new overlapp_sct;
 	DWORD dwBytes;
 
 	if (!lpfn_accept_ex_(listenSocket, accept_sock,
-		pOverlapPlus.buf, 0,
+		pOverlapPlus->buf, 0,
 		sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes,
-		&pOverlapPlus.overlapp))
+		&pOverlapPlus->overlapp))
 	{
 		int err = WSAGetLastError();
 
@@ -130,6 +137,11 @@ int DataInterChange::PutAccpet()
 			return -1;
 		}
 	}
+
+	pOverlapPlus->ListenSocket = listenSocket;
+	pOverlapPlus->ConnectSocket = accept_sock;
+
+	return 0;
 }
 
 int DataInterChange::PutReceve(SOCKET& socket_handle, SOCKET& listen_socket_handle)
@@ -138,12 +150,16 @@ int DataInterChange::PutReceve(SOCKET& socket_handle, SOCKET& listen_socket_hand
 		(HANDLE)completion_handle_,
 		(u_long)COMPLETION_PORT_RECEV, 0);
 
-	overlapp_sct pOverlapPlus;
+	overlapp_sct* pOverlapPlus = new overlapp_sct;
+	pOverlapPlus->ConnectSocket = socket_handle;
+	pOverlapPlus->ListenSocket = listenSocket;
+	pOverlapPlus->overlapp_type = COMPLETION_PORT_RECEV;
+
 	ULONG flags = 0;
 	DWORD count;
 
-	int res = WSARecv(socket_handle, &pOverlapPlus.buf, 1, &count, &flags,
-		&pOverlapPlus.overlapp_type, NULL);
+	int res = WSARecv(socket_handle, &pOverlapPlus->buf, 1, &count, &flags,
+		&pOverlapPlus->overlapp_type, NULL);
 
 	if (SOCKET_ERROR == res)
 	{
@@ -151,6 +167,7 @@ int DataInterChange::PutReceve(SOCKET& socket_handle, SOCKET& listen_socket_hand
 
 		if (err != WSA_IO_PENDING)
 		{
+			delete &pOverlapPlus;
 			return false;
 		}
 	}

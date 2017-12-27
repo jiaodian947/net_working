@@ -12,6 +12,8 @@ enum COMPLETION_PORT_TYPE
 typedef struct overlapp_sct
 {
 	OVERLAPPED overlapp;
+	SOCKET ListenSocket;
+	SOCKET ConnectSocket;
 	int overlapp_type;
 	char buf[256];
 
