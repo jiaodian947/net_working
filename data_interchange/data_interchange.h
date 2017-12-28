@@ -1,6 +1,10 @@
 #ifndef DATA_INTERCHANGE_H
 #define DATA_INTERCHANGE_H
 
+#include <WinSock2.h>
+#pragma comment(lib, "WS2_32") 
+#include <mswsock.h>
+
 class DataInterChange
 {
 public:
@@ -14,6 +18,9 @@ public:
 	int CreateListener(const char* addr, int port);
 private:
 	void* completion_handle_;	//Íê³É¶Ë¿Ú¾ä±ú 
+
+	LPFN_ACCEPTEX lpfn_accept_ex_;
+	LPFN_GETACCEPTEXSOCKADDRS lpfn_get_acceptex_sock_addrs_;
 
 };
 #endif

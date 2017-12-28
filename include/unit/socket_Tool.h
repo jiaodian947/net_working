@@ -45,4 +45,26 @@ bool BingSocket(SOCKET& socket_handle, const char* addr, int port)
 	}
 	return true;
 }
+
+bool ListenSocket(SOCKET& socket_handle, int backlog)
+{
+	int res = listen(socket_handle, SOMAXCONN_HINT(backlog));
+	if (SOCKET_ERROR == res)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool SocketClose(SOCKET& sock_handle)
+{
+	int res = closesocket(sock_handle);
+	if (SOCKET_ERROR == res)
+	{
+		return false;
+	}
+
+	return true;
+}
 #endif // !DEF_SOCKETDEFINE

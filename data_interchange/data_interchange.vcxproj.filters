@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\define\socket_define.h">
-      <Filter>include\define</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\unit\get_parameters_number.h">
       <Filter>include\unit</Filter>
     </ClInclude>
@@ -22,6 +19,12 @@
       <Filter>include\unit</Filter>
     </ClInclude>
     <ClInclude Include="data_interchange.h" />
+    <ClInclude Include="..\include\define\data_interchange_define.h">
+      <Filter>include\define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\unit\socket_Tool.h">
+      <Filter>include\unit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="data_interchange.cpp" />
