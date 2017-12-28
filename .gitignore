@@ -3,6 +3,4 @@
 data_interchange/data_interchange.vcxproj.user
 net_working.VC.db
 net_working.VC.VC.opendb
-data_interchange/x64/Debug/
-publish/Debugx86/
-data_interchange/data_interchange.log
+publish/
