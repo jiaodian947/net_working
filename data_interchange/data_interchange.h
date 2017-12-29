@@ -16,8 +16,16 @@ public:
 
 	// 创建监听
 	int CreateListener(const char* addr, int port);
+
+	// 接受消息
+	int GetEventInfo();
+
+	int PutAccpet();
+
 private:
-	void* completion_handle_;	//完成端口句柄 
+
+	//完成端口句柄 
+	void* completion_handle_;	
 
 	LPFN_ACCEPTEX lpfn_accept_ex_;
 	LPFN_GETACCEPTEXSOCKADDRS lpfn_get_acceptex_sock_addrs_;

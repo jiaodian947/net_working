@@ -103,3 +103,37 @@ int DataInterChange::CreateListener(const char* addr, int port)
 
 	return 0;
 }
+
+int DataInterChange::GetEventInfo()
+{
+	DWORD count;
+	OVERLAPPED *overlapp = NULL;
+	int index;
+	while (1)
+	{
+		if (GetQueuedCompletionStatus(completion_handle_, &count, (PULONG_PTR)&index, &overlapp, INFINITE))  //第三个lpCompletionKey参数不能填null，可以随意填写一个结构体进去，如果是null不管怎么这个函数都不会阻塞；
+		{
+			overlapp_sct* pIoContext = (overlapp_sct*)overlapp;
+			switch (index)
+			{
+			case COMPLETION_PORT_LISTENER:
+			{
+				
+			}
+			break;
+			case COMPLETION_PORT_ACCPTE:
+			{
+
+			}
+				break;
+			}
+		}
+	}
+
+	return 0;
+}
+
+int DataInterChange::PutAccpet()
+{
+
+}

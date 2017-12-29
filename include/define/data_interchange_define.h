@@ -5,7 +5,8 @@
 enum COMPLETION_PORT_TYPE
 {
 	COMPLETION_PORT_NONE,				// 无类型，可以用来删除		
-	COMPLETION_PORT_LISTENER			// 监听类型
+	COMPLETION_PORT_LISTENER,			// 监听类型
+	COMPLETION_PORT_ACCPTE,				// 接受
 };
 
 typedef struct overlapp_sct
