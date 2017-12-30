@@ -16,7 +16,7 @@ inline bool GetSocket(SOCKET& socket_handle)
 
 	return true;
 }
-		
+
 inline bool SetBroadcast(SOCKET& socket_handle)
 {
 	// 设置socket可重用

@@ -29,29 +29,28 @@ bool DataInterChange::IniWinSocket()
 
 int DataInterChange::CreateListener(const char* addr, int port)
 {
-	SOCKET socket;
-	if (!GetSocket(socket))
+	if (!GetSocket(listenSocket))
 	{
 		return  0;
 	}
 	
-	HANDLE handle = CreateIoCompletionPort((HANDLE)socket, completion_handle_, COMPLETION_PORT_LISTENER, 0);
+	HANDLE handle = CreateIoCompletionPort((HANDLE)listenSocket, completion_handle_, COMPLETION_PORT_LISTENER, 0);
 	if (handle != (HANDLE)completion_handle_)
 	{
 		return 0;
 	}
 
-	if (!BingSocket(socket, addr, port))
+	if (!BingSocket(listenSocket, addr, port))
 	{
 		return 0;
 	}
 
-	if (!SetBroadcast(socket))
+	if (!SetBroadcast(listenSocket))
 	{
 		return 0;
 	}
 
-	if (!ListenSocket(socket, SOMAXCONN))
+	if (!ListenSocket(listenSocket, SOMAXCONN))
 	{
 		return 0;
 	}
@@ -62,10 +61,10 @@ int DataInterChange::CreateListener(const char* addr, int port)
 	GUID GuidGetAcceptExSockaddrs = WSAID_GETACCEPTEXSOCKADDRS;
 	DWORD dwIoctlBytes;
 
-	WSAIoctl(socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx,
+	WSAIoctl(listenSocket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx,
 		sizeof(GuidAcceptEx), &lpfnAcceptEx, sizeof(lpfnAcceptEx),
 		&dwIoctlBytes, NULL, NULL);
-	WSAIoctl(socket, SIO_GET_EXTENSION_FUNCTION_POINTER,
+	WSAIoctl(listenSocket, SIO_GET_EXTENSION_FUNCTION_POINTER,
 		&GuidGetAcceptExSockaddrs, sizeof(GuidGetAcceptExSockaddrs),
 		&lpfnGetAcceptExSockaddrs, sizeof(lpfnGetAcceptExSockaddrs),
 		&dwIoctlBytes, NULL, NULL);
@@ -75,36 +74,13 @@ int DataInterChange::CreateListener(const char* addr, int port)
 
 	for (size_t i = 0; i < 10; ++i)
 	{
-		SOCKET accept_sock;
-
-		if (!GetSocket(accept_sock))
-		{
-			return -1;
-		}
-
-		// ready to accept
-		overlapp_sct pOverlapPlus;
-		DWORD dwBytes;
-
-		if (!lpfnAcceptEx(socket, accept_sock,
-			pOverlapPlus.buf, 0,
-			sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes,
-			&pOverlapPlus.overlapp))
-		{
-			int err = WSAGetLastError();
-
-			if (err != WSA_IO_PENDING)
-			{
-				SocketClose(accept_sock);
-				return -1;
-			}
-		}
+		PutAccpet();
 	}
 
 	return 0;
 }
 
-int DataInterChange::GetEventInfo()
+int DataInterChange::LoopEventInfo()
 {
 	DWORD count;
 	OVERLAPPED *overlapp = NULL;
@@ -121,11 +97,6 @@ int DataInterChange::GetEventInfo()
 				
 			}
 			break;
-			case COMPLETION_PORT_ACCPTE:
-			{
-
-			}
-				break;
 			}
 		}
 	}
@@ -135,5 +106,54 @@ int DataInterChange::GetEventInfo()
 
 int DataInterChange::PutAccpet()
 {
+	SOCKET accept_sock;
 
+	if (!GetSocket(accept_sock))
+	{
+		return -1;
+	}
+
+	// ready to accept
+	overlapp_sct pOverlapPlus;
+	DWORD dwBytes;
+
+	if (!lpfn_accept_ex_(listenSocket, accept_sock,
+		pOverlapPlus.buf, 0,
+		sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes,
+		&pOverlapPlus.overlapp))
+	{
+		int err = WSAGetLastError();
+
+		if (err != WSA_IO_PENDING)
+		{
+			SocketClose(accept_sock);
+			return -1;
+		}
+	}
+}
+
+int DataInterChange::PutReceve(SOCKET& socket_handle, SOCKET& listen_socket_handle)
+{
+	HANDLE handle = CreateIoCompletionPort((HANDLE)socket_handle,
+		(HANDLE)completion_handle_,
+		(u_long)COMPLETION_PORT_RECEV, 0);
+
+	overlapp_sct pOverlapPlus;
+	ULONG flags = 0;
+	DWORD count;
+
+	int res = WSARecv(socket_handle, &pOverlapPlus.buf, 1, &count, &flags,
+		&pOverlapPlus.overlapp_type, NULL);
+
+	if (SOCKET_ERROR == res)
+	{
+		int err = WSAGetLastError();
+
+		if (err != WSA_IO_PENDING)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
