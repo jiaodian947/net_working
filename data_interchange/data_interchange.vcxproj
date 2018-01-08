@@ -113,6 +113,10 @@
     <ClInclude Include="..\include\define\socket_define.h" />
     <ClInclude Include="..\include\unit\get_parameters_number.h" />
     <ClInclude Include="..\include\unit\singleton_temp.h" />
+    <ClInclude Include="data_interchange.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="data_interchange.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

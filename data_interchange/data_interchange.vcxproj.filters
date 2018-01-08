@@ -21,5 +21,9 @@
     <ClInclude Include="..\include\unit\singleton_temp.h">
       <Filter>include\unit</Filter>
     </ClInclude>
+    <ClInclude Include="data_interchange.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="data_interchange.cpp" />
   </ItemGroup>
 </Project>
